@@ -1,0 +1,6 @@
+from: mhart/alpine-node:8
+expose:
+  - 8080:8080
+tasks:
+  env: env | sort
+  shell: /bin/sh

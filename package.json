@@ -1,0 +1,11 @@
+{
+  "name": "ts-react-express",
+  "version": "0.1.0",
+  "description": "<description>",
+  "main": "index.js",
+  "author": "Kent Safranski <fluidbyte>",
+  "license": "MIT",
+  "scripts": {
+    "dev": "echo \"run...\""
+  }
+}

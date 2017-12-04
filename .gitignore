@@ -1,0 +1,12 @@
+# Dependencies
+node_modules/
+
+# Development
+coverage/
+
+# Dist
+server/dist
+client/bundle.js
+
+# Other
+**/*.log
