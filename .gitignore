@@ -6,7 +6,7 @@ coverage/
 
 # Dist
 server/dist
-client/bundle.js
+client/dist/bundle.js
 
 # Other
 **/*.log

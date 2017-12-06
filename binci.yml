@@ -4,3 +4,17 @@ expose:
 tasks:
   env: env | sort
   shell: /bin/sh
+  clean: rm -rf node_modules
+  install: yarn
+  build: yarn build
+  build:client: yarn build:client
+  build:server: yarn build:server
+  lint: yarn lint
+  lint:client: yarn lint:client
+  lint:server: yarn lint:server
+  dev: yarn dev
+  all: |
+    rm -rf node_modules
+    yarn
+    yarn lint
+    yarn build
