@@ -1,9 +1,12 @@
+const webpack = require('webpack')
+
 module.exports = {
-  entry: "./client/src/main.tsx",
+  entry: [ "./client/src/main.tsx", 'webpack-hot-middleware/client?path=/__webpack_hmr' ],
   
   output: {
     filename: "bundle.js",
-    path: __dirname + "/client/dist"
+    path: __dirname + "/client/dist",
+    publicPath: '/'
   },
 
   // Enable sourcemaps for debugging webpack's output.
@@ -29,4 +32,8 @@ module.exports = {
       { enforce: "pre", test: /\.js$/, loader: "source-map-loader" }
     ]
   },
+  
+  plugins: [
+    new webpack.HotModuleReplacementPlugin()
+  ]
 }

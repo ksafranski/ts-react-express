@@ -1,13 +1,21 @@
 import * as React from 'react'
 
-export interface AppProps {
+export interface FooProps {
   word: string
 }
 
-export class App extends React.Component<AppProps, {}> {
+export class Foo extends React.Component<FooProps, {}> {
   render () {
     return (
-      <h1>Hello {this.props.word}!</h1>
+      <span>{this.props.word}</span>
+    )
+  }
+}
+
+export class App extends React.Component {
+  render () {
+    return (
+      <h1>Hello <Foo word="world" />!</h1>
     )
   }
 }

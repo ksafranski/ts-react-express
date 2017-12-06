@@ -1,10 +1,16 @@
 import * as express from 'express'
 import * as path from 'path'
 
-const PORT = process.env.PORT || 8080
+const PORT = process.env.PORT || 8888
 
 const app = express()
 
-app.use(express.static(path.resolve(__dirname, '../../client')))
+// HMR
+require('./util/webpack_hmr')(app)
 
-app.listen(PORT)
+// Static server
+app.use(express.static(path.resolve(process.cwd(), './client')))
+
+app.listen(PORT, () => {
+  console.log(`Server running on ${PORT}`)
+})

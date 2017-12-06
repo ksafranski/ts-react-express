@@ -9,7 +9,7 @@
     "build": "webpack && tsc -p ./server",
     "build:client": "webpack",
     "build:server": "tsc -p ./server",
-    "dev": "nodemon --watch \"src/**/*.ts\" --exec \"ts-node\" src/index.ts",
+    "dev": "nodemon",
     "lint": "npm run lint:client && npm run lint:server",
     "lint:client": "tslint --project ./client --fix \"client/src/**/*.tsx\"",
     "lint:server": "tslint --project ./server --fix \"server/src/**/*.ts\""
@@ -22,12 +22,15 @@
     "tslint": "^5.8.0",
     "tslint-config-standard": "^7.0.0",
     "typescript": "^2.6.2",
-    "webpack": "^3.10.0"
+    "webpack": "^3.10.0",
+    "webpack-dev-server": "^2.9.5",
+    "webpack-hot-middleware": "^2.21.0"
   },
   "dependencies": {
     "@types/express": "^4.0.39",
     "@types/react": "^16.0.27",
     "@types/react-dom": "^16.0.3",
+    "@types/webpack-env": "^1.13.2",
     "express": "^4.16.2",
     "react": "^16.2.0",
     "react-dom": "^16.2.0"
