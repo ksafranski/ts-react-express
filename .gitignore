@@ -5,8 +5,8 @@ node_modules/
 coverage/
 
 # Dist
-server/dist
-client/dist/bundle.js
+server/dist/
+client/dist/
 
 # Other
 **/*.log
