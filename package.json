@@ -9,14 +9,29 @@
     "build": "webpack && tsc -p ./server",
     "build:client": "webpack",
     "build:server": "tsc -p ./server",
-    "dev": "nodemon",
+    "dev": "nodemon --ignore ./client",
     "lint": "npm run lint:client && npm run lint:server",
     "lint:client": "tslint --project ./client --fix \"client/src/**/*.tsx\"",
-    "lint:server": "tslint --project ./server --fix \"server/src/**/*.ts\""
+    "lint:server": "tslint --project ./server --fix \"server/src/**/*.ts\"",
+    "test": "npm run test:server && npm run test:client",
+    "test:server": "JASMINE_CONFIG_PATH=./test/jasmine.json jasmine-ts -p ./server/tsconfig.json \"test/server/**/*.spec.ts\"",
+    "test:server:watch": "JASMINE_CONFIG_PATH=./test/jasmine.json nodemon -e ts --exec 'jasmine-ts \"test/server/**/*.spec.ts\"'",
+    "test:client": "JASMINE_CONFIG_PATH=./test/jasmine.json jasmine-ts -p ./client/tsconfig.json \"test/client/**/*.spec.ts\"",
+    "test:client:watch": "JASMINE_CONFIG_PATH=./test/jasmine.json nodemon -e ts,tsx --exec 'jasmine-ts \"test/client/**/*.spec.ts\"'",
+    "coverage:server": "JASMINE_CONFIG_PATH=./test/jasmine.json nyc --report-dir=./coverage/server --include=\"server/**/*\" jasmine-ts -p ./server/tsconfig.json \"test/server/**/*.spec.ts\"",
+    "coverage:client": "JASMINE_CONFIG_PATH=./test/jasmine.json nyc --report-dir=./coverage/client --include=\"client/**/*\" jasmine-ts -p ./client/tsconfig.json \"test/client/**/*.spec.ts\""
   },
   "devDependencies": {
+    "@types/jasmine": "^2.8.2",
     "awesome-typescript-loader": "^3.4.1",
+    "jasmine": "^2.8.0",
+    "jasmine-sinon": "^0.4.0",
+    "jasmine-spec-reporter": "^4.2.1",
+    "jasmine-ts": "^0.2.1",
     "nodemon": "^1.12.5",
+    "nyc": "^11.3.0",
+    "proxyquire": "^1.8.0",
+    "sinon": "^4.1.2",
     "source-map-loader": "^0.2.3",
     "ts-node": "^3.3.0",
     "tslint": "^5.8.0",
@@ -34,5 +49,23 @@
     "express": "^4.16.2",
     "react": "^16.2.0",
     "react-dom": "^16.2.0"
+  },
+  "nyc": {
+    "check-coverage": false,
+    "per-file": true,
+    "lines": 95,
+    "statements": 95,
+    "functions": 95,
+    "branches": 95,
+    "reporter": [
+      "lcov",
+      "text-summary"
+    ],
+    "extension": [
+      ".ts",
+      ".tsx"
+    ],
+    "cache": false,
+    "all": true
   }
 }

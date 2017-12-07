@@ -10,3 +10,4 @@ client/dist/
 
 # Other
 **/*.log
+.nyc_output/
