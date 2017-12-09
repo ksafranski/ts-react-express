@@ -1,3 +1,4 @@
+const pkg = require('./package.json')
 const path = require('path')
 const webpack = require('webpack')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
@@ -95,7 +96,7 @@ const webpackConfig = {
       },
     }),
     new HtmlWebpackPlugin({
-      title: 'React Lightbox Exercise',
+      title: pkg.name,
       inject: true,
       chunksSortMode: 'dependency',
       template: path.resolve(__dirname, 'client/src/index.html'),
