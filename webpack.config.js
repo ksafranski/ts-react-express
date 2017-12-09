@@ -1,27 +1,43 @@
-const webpack = require('webpack')
 const path = require('path')
+const webpack = require('webpack')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
 
-module.exports = {
-  entry: [ "./client/src/main.tsx", 'webpack-hot-middleware/client?path=/__webpack_hmr' ],
-  
+const __DEV__ = process.env.NODE_ENV === 'development'
+const __PROD__ = process.env.NODE_ENV === 'production'
+
+const extractStyles = new ExtractTextPlugin({
+  filename: 'styles/[name].[contenthash].css',
+  allChunks: true,
+  disable: __DEV__,
+})
+
+const webpackConfig = {
+  entry: {
+    main: [path.resolve(__dirname, 'client/src/index')],
+    vendor: [
+      'react',
+      'react-dom',
+    ],
+  },
+  target: 'web',
+  devtool: __DEV__ ? 'cheap-module-eval-source-map' : 'source-map',
+  performance: {
+    hints: false,
+  },
   output: {
-    filename: "bundle.js",
-    path: __dirname + "/client/dist",
-    publicPath: '/'
+    path: path.resolve(__dirname, 'client/dist'),
+    filename: '[name].js',
+    publicPath: '/',
   },
-
-  // Enable sourcemaps for debugging webpack's output.
-  devtool: "source-map",
-
   resolve: {
-    // Add '.ts' and '.tsx' as resolvable extensions.
-    extensions: [".ts", ".tsx", ".js", ".json"]
+    extensions: ['*', '.js', '.jsx', '.json', '.ts', '.tsx'],
+    alias: {
+      '~': path.resolve(__dirname, 'client/src'),
+    },
   },
-
   module: {
     rules: [
-      // All files with a '.ts' or '.tsx' extension will be handled by 'awesome-typescript-loader'.
       { 
         test: /\.tsx?$/, 
         loader: "awesome-typescript-loader", 
@@ -29,29 +45,94 @@ module.exports = {
           configFileName: './client/tsconfig.json'
         }
       },
-
-      // All output '.js' files will have any sourcemaps re-processed by 'source-map-loader'.
-      { enforce: "pre", test: /\.js$/, loader: "source-map-loader" },
-      
-      // Sass
       {
-        test:/.\scss$/,
-        use:ExtractTextPlugin.extract({
-          fallback:'style-loader',
-          use: ['css-loader','sass-loader']
+        test: /\.(sass|scss)$/,
+        loader: extractStyles.extract({
+          fallback: 'style-loader',
+          use: [
+            {
+              loader: 'css-loader',
+              options: {
+                sourceMap: true,
+                minimize: {
+                  autoprefixer: {
+                    add: true,
+                    remove: true,
+                    browsers: ['last 2 versions'],
+                  },
+                  discardComments: {
+                    removeAll: true,
+                  },
+                  discardUnused: false,
+                  mergeIdents: false,
+                  reduceIdents: false,
+                  safe: true,
+                  sourcemap: true,
+                },
+              },
+            },
+            {
+              loader: 'sass-loader',
+              options: {
+                sourceMap: true,
+                includePaths: [
+                  path.resolve(__dirname, 'client/src/styles'),
+                ],
+              },
+            },
+          ],
         }),
-        include: path.resolve(__dirname,'src/styles')
-      },{
-        test: /.\css$/,
-        use:ExtractTextPlugin.extract({
-          fallback:'style-loader',
-          use: 'css-loader'
-        })
-      }
-    ]
+      },
+    ],
   },
-  
   plugins: [
-    new webpack.HotModuleReplacementPlugin(),
-  ]
+    extractStyles,
+    new webpack.DefinePlugin({
+      __DEV__,
+      __PROD__,
+      'process.env': {
+        NODE_ENV: JSON.stringify(process.env.NODE_ENV),
+      },
+    }),
+    new HtmlWebpackPlugin({
+      title: 'React Lightbox Exercise',
+      inject: true,
+      chunksSortMode: 'dependency',
+      template: path.resolve(__dirname, 'client/src/index.html'),
+      minify: {
+        collapseWhitespace: true,
+      },
+    }),
+  ],
 }
+
+if (__PROD__) {
+  const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
+
+  webpackConfig.plugins.push(
+    new webpack.optimize.CommonsChunkPlugin({ names: ['manifest', 'vendor'] }),
+    new webpack.optimize.ModuleConcatenationPlugin(),
+    new webpack.LoaderOptionsPlugin({
+      minimize: true,
+      debug: false,
+    }),
+    new UglifyJsPlugin({
+      sourceMap: true,
+      comments: false,
+      compress: {
+        warnings: false,
+        screw_ie8: true,
+        conditionals: true,
+        unused: true,
+        comparisons: true,
+        sequences: true,
+        dead_code: true,
+        evaluate: true,
+        if_return: true,
+        join_vars: true,
+      },
+    })
+  )
+}
+
+module.exports = webpackConfig
